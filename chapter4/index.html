@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello, canvas!</title>
+</head>
+<body>
+<canvas id="main_canvas"></canvas>
+</body>
+<script type="module">
+let canvas;
+let ctx;
+let mod;
+
+async function initialize() {
+  canvas = document.getElementById('main_canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx = canvas.getContext('2d');
+  mod = await import('./script.js');
+}
+
+function render() {
+  mod.drawRect(ctx, 0, 0, canvas.width, canvas.height, 'rgba(200, 200, 200, 0.7)');
+  mod.drawLine(ctx, 20, 30, 230, 90, 'rgb(0, 0, 0)');
+
+  const points1 = [
+    100, 100,
+    300, 100,
+    100, 300,
+    300, 300
+  ];
+  mod.drawPolygon(ctx, points1, '#000000');
+
+  const POINT_COUNT = 5;
+  const points2 = [];
+  for (let i = 0; i < POINT_COUNT; ++i) {
+    points2.push(mod.generateRandomInt(300) + 300,
+                 mod.generateRandomInt(300));
+  }
+  mod.drawPolygon(ctx, points2, '#000000');
+
+  mod.drawCircle(ctx, 400, 400, 50, '#ff00ff');
+
+  const startRadian = Math.random() * Math.PI * 2.0;
+  const endRadian = Math.random() * Math.PI * 2.0;
+  mod.drawFan(ctx, 200, 400, 25, startRadian, endRadian, '#ff00ff');
+
+  mod.drawQuadraticBezier(ctx, 20, 530, 230, 630, 200, 300, '#000000');
+  mod.drawCubicBezier(
+      ctx, 320, 530, 330, 630, 500, 300, 600, 250, '#000000', 3);
+}
+
+window.addEventListener('load', async () => {
+  await initialize();
+  render();
+});
+</script>
+</html>
